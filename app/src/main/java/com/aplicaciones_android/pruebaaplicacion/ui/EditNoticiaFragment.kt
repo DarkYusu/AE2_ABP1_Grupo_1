@@ -12,20 +12,28 @@ import androidx.lifecycle.ViewModelProvider
 import com.aplicaciones_android.pruebaaplicacion.R
 import com.aplicaciones_android.pruebaaplicacion.viewmodel.NewsViewModel
 
-class EditNoticiaFragment : Fragment() {
-    private var noticiaId: Int = -1
 
+class EditNoticiaFragment : Fragment() {
+    //region Declaración de clase y variables
+    private var noticiaId: Int = -1
+    //endregion
+
+    //region Ciclo de vida: onCreate
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         noticiaId = arguments?.getInt("noticia_id") ?: -1
     }
+    //endregion
 
+    //region Inflado de layout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_edit_noticia, container, false)
     }
+    //endregion
 
+    //region Inicialización de UI y lógica de edición
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val titulo = view.findViewById<EditText>(R.id.editTitulo)
@@ -57,4 +65,5 @@ class EditNoticiaFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
     }
+    //endregion
 }

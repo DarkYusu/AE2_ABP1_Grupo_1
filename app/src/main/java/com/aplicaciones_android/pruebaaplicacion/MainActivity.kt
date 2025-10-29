@@ -12,14 +12,19 @@ import com.aplicaciones_android.pruebaaplicacion.ui.ListNoticiasFragment
 import com.aplicaciones_android.pruebaaplicacion.ui.CreateNoticiaFragment
 import com.aplicaciones_android.pruebaaplicacion.viewmodel.NewsViewModel
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: NewsViewModel
 
+class MainActivity : AppCompatActivity() {
+    //region Declaración de clase y variables
+    private lateinit var viewModel: NewsViewModel
+    //endregion
+
+    //region Ciclo de vida: onCreate
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        //region Inicialización de UI y navegación
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -44,11 +49,10 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             bottomNav.selectedItemId = R.id.nav_list
         }
+        //endregion
 
-        // Inicializar ViewModel
+        //region Inicialización de ViewModel y actualización automática
         viewModel = androidx.lifecycle.ViewModelProvider(this).get(NewsViewModel::class.java)
-
-        // Actualización automática cada 3 segundos
         val handler = Handler(Looper.getMainLooper())
         val updateRunnable = object : Runnable {
             override fun run() {
@@ -57,8 +61,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
         handler.post(updateRunnable)
+        //endregion
     }
+    //endregion
 
+    //region Navegación con animación
     private fun replaceFragmentWithAnimation(fragment: androidx.fragment.app.Fragment) {
         supportFragmentManager.beginTransaction()
             .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right)
@@ -66,4 +73,5 @@ class MainActivity : AppCompatActivity() {
             .addToBackStack(null)
             .commit()
     }
+    //endregion
 }

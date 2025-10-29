@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aplicaciones_android.pruebaaplicacion.R
 import com.aplicaciones_android.pruebaaplicacion.model.News
 
+//region Declaración de clase y constructor
 class NewsAdapter(private var items: List<News>, private val onClick: (News) -> Unit) : RecyclerView.Adapter<NewsAdapter.VH>() {
+    //endregion
 
+    //region ViewHolder
     inner class VH(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.title)
         val description: TextView = view.findViewById(R.id.description)
@@ -23,12 +26,16 @@ class NewsAdapter(private var items: List<News>, private val onClick: (News) -> 
         val btnEdit: ImageButton = view.findViewById(R.id.btnEdit)
         val btnDelete: ImageButton = view.findViewById(R.id.btnDelete)
     }
+    //endregion
 
+    //region Ciclo de vida del adapter
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_news, parent, false)
         return VH(view)
     }
+    //endregion
 
+    //region Lógica de binding y acciones de los botones
     override fun onBindViewHolder(holder: VH, position: Int) {
         val item = items[position]
         val titleText = if (item.title.isBlank()) "Sin título" else item.title
@@ -41,7 +48,6 @@ class NewsAdapter(private var items: List<News>, private val onClick: (News) -> 
 
         holder.title.text = titleText
         holder.title.visibility = View.VISIBLE
-
         holder.description.text = descText
         holder.description.visibility = if (descText.isEmpty()) View.GONE else View.VISIBLE
 
@@ -58,6 +64,7 @@ class NewsAdapter(private var items: List<News>, private val onClick: (News) -> 
             holder.link.visibility = View.GONE
         }
 
+        //region Acción editar
         holder.btnEdit.setOnClickListener {
             val fragment = EditNoticiaFragment()
             fragment.arguments = android.os.Bundle().apply { putInt("noticia_id", item.id ?: -1) }
@@ -67,6 +74,9 @@ class NewsAdapter(private var items: List<News>, private val onClick: (News) -> 
                 .addToBackStack(null)
                 .commit()
         }
+        //endregion
+
+        //region Acción eliminar con confirmación
         holder.btnDelete.setOnClickListener {
             val activity = holder.itemView.context as androidx.fragment.app.FragmentActivity
             val viewModel = androidx.lifecycle.ViewModelProvider(activity).get(com.aplicaciones_android.pruebaaplicacion.viewmodel.NewsViewModel::class.java)
@@ -82,7 +92,9 @@ class NewsAdapter(private var items: List<News>, private val onClick: (News) -> 
                     .show()
             }
         }
+        //endregion
 
+        //region Acción ver detalle
         holder.itemView.setOnClickListener {
             val fragment = DetalleNoticiaFragment()
             fragment.arguments = android.os.Bundle().apply { putInt("noticia_id", item.id ?: -1) }
@@ -92,14 +104,17 @@ class NewsAdapter(private var items: List<News>, private val onClick: (News) -> 
                 .addToBackStack(null)
                 .commit()
         }
+        //endregion
 
         // Animación de aparición (fade in)
         holder.itemView.alpha = 0f
         holder.itemView.animate().alpha(1f).setDuration(400).start()
     }
+    //endregion
 
     override fun getItemCount(): Int = items.size
 
+    //region Actualización eficiente de la lista con DiffUtil
     fun update(newItems: List<News>) {
         val diffCallback = object : DiffUtil.Callback() {
             override fun getOldListSize() = items.size
@@ -115,4 +130,5 @@ class NewsAdapter(private var items: List<News>, private val onClick: (News) -> 
         items = newItems
         diffResult.dispatchUpdatesTo(this)
     }
+    //endregion
 }

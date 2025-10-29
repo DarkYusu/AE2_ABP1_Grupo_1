@@ -1,3 +1,4 @@
+//region Imports
 package com.aplicaciones_android.pruebaaplicacion.viewmodel
 
 import android.util.Log
@@ -9,19 +10,27 @@ import com.aplicaciones_android.pruebaaplicacion.model.News
 import com.aplicaciones_android.pruebaaplicacion.repository.NewsRepository
 import com.aplicaciones_android.pruebaaplicacion.repository.Result
 import kotlinx.coroutines.launch
+//endregion
 
+//region Estados de UI
 sealed class UiState {
-    object Loading : UiState()
     data class Success(val data: List<News>) : UiState()
     data class Error(val message: String) : UiState()
+    object Loading : UiState()
 }
+//endregion
 
-class NewsViewModel(private val repository: NewsRepository = NewsRepository()) : ViewModel() {
+
+class NewsViewModel : ViewModel() {
+    //region Declaración de clase y variables
+    private val repository = NewsRepository()
     private val _state = MutableLiveData<UiState>()
-    val state: LiveData<UiState> = _state
+    val state: LiveData<UiState> get() = _state
 
     private var currentUser: String = "antonio"
+    //endregion
 
+    //region Métodos públicos
     init {
         refresh()
     }
@@ -81,4 +90,5 @@ class NewsViewModel(private val repository: NewsRepository = NewsRepository()) :
             refresh()
         }
     }
+    //endregion
 }
