@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Prueba aplicacion</string>
+    <string name="refresh">Refrescar</string>
+    <string name="edit_news">Editar noticia</string>
+    <string name="delete_news">Eliminar noticia</string>
+    <string name="no_news">No hay noticias disponibles</string>
+</resources>
