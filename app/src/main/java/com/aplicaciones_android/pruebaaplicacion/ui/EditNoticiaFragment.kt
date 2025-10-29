@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -36,6 +38,15 @@ class EditNoticiaFragment : Fragment() {
     //region Inicialización de UI y lógica de edición
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Ajustar padding inferior del contenedor cuando aparece el teclado (IME) para un desplazamiento suave
+        try {
+            val scroll = view.findViewById<android.view.View>(android.R.id.content) ?: view
+            ViewCompat.setOnApplyWindowInsetsListener(scroll) { v, insets ->
+                val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+                v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, ime.bottom)
+                insets
+            }
+        } catch (_: Exception) {}
         val titulo = view.findViewById<EditText>(R.id.editTitulo)
         val descripcion = view.findViewById<EditText>(R.id.editDescripcion)
         val fuente = view.findViewById<EditText>(R.id.editFuente)

@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.aplicaciones_android.pruebaaplicacion.R
 import com.aplicaciones_android.pruebaaplicacion.viewmodel.NewsViewModel
@@ -31,19 +33,52 @@ class CreateNoticiaFragment : Fragment() {
     //region Inicialización de UI y lógica de creación
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Ajustar padding inferior del contenedor cuando aparece el teclado (IME) para un desplazamiento suave
+        try {
+            val scroll = view.findViewById<View>(android.R.id.content) ?: view
+            ViewCompat.setOnApplyWindowInsetsListener(scroll) { v, insets ->
+                val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+                v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, ime.bottom)
+                insets
+            }
+        } catch (_: Exception) {}
         viewModel = ViewModelProvider(requireActivity()).get(NewsViewModel::class.java)
         val titulo = view.findViewById<EditText>(R.id.editTitulo)
         val descripcion = view.findViewById<EditText>(R.id.editDescripcion)
         val fuente = view.findViewById<EditText>(R.id.editFuente)
         val btnCrear = view.findViewById<Button>(R.id.btnCrear)
+
+        // Limpiar cualquier resultado previo para evitar que se dispare al abrir el fragment
+        viewModel.clearCreateResult()
+
+        // Observar resultado específico de creación (evita confundir con refresh success)
+        viewModel.createResult.observe(viewLifecycleOwner) { event ->
+            event?.getContentIfNotHandled()?.let { result ->
+                if (result == "SUCCESS") {
+                    Toast.makeText(requireContext(), "Noticia creada", Toast.LENGTH_SHORT).show()
+                    // limpiar inputs
+                    titulo.text.clear()
+                    descripcion.text.clear()
+                    fuente.text.clear()
+                    // Navegar explícitamente a la lista usando MainActivity para evitar inconsistencias del back stack
+                    (activity as? com.aplicaciones_android.pruebaaplicacion.MainActivity)?.navigateToList()
+                } else {
+                    Toast.makeText(requireContext(), "Error al crear noticia: $result", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         btnCrear.setOnClickListener {
-            viewModel.createNoticia(
-                titulo.text.toString(),
-                descripcion.text.toString(),
-                fuente.text.toString()
-            )
-            Toast.makeText(requireContext(), "Noticia creada", Toast.LENGTH_SHORT).show()
-            requireActivity().supportFragmentManager.popBackStack()
+            // Validación mínima de campos
+            val t = titulo.text.toString().trim()
+            val d = descripcion.text.toString().trim()
+            val f = fuente.text.toString().trim()
+            if (t.isEmpty()) {
+                Toast.makeText(requireContext(), "Introduce el título", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            // Lanzar la creación y dejar que el observer maneje el resultado
+            viewModel.createNoticia(t, d, f)
         }
     }
     //endregion

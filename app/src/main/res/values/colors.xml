@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Paleta suave para modo claro -->
+    <color name="primary">#4F83CC</color> <!-- soft blue -->
+    <color name="primary_variant">#6AA0E6</color>
+    <color name="accent">#7FB3FF</color>
+
+    <color name="surface">#FFFFFF</color>
+    <color name="background_light">#F7FAFC</color> <!-- very light gray/blue -->
+
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#556070</color>
+
+    <!-- kept generic black/white for compatibility -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

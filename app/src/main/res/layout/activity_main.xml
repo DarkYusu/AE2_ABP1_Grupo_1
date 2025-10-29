@@ -5,7 +5,22 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_light"
     tools:context=".MainActivity">
+
+    <!-- AppBar / Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="@color/surface"
+        android:theme="@style/ThemeOverlay.AppCompat.Light"
+        android:elevation="4dp"
+        app:titleTextColor="@color/text_primary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:title="@string/aplicacion_noticias" />
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer"
@@ -26,7 +41,8 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_nav"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:padding="8dp" />
+        android:padding="8dp"
+        />
 
     <ProgressBar
         android:id="@+id/progress"
@@ -44,11 +60,23 @@
         android:layout_height="48dp"
         android:src="@android:drawable/ic_dialog_alert"
         android:visibility="gone"
-        android:contentDescription="Error de red"
+        android:contentDescription="@string/error_network"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="8dp" />
+
+    <!-- Logout button -->
+    <!-- <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/logout"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp" /> -->
 
     <TextView
         android:id="@+id/error"
@@ -76,12 +104,12 @@
 
     <FrameLayout
         android:id="@+id/fragment_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/shimmer"
+        android:layout_width="411dp"
+        android:layout_height="544dp"
         app:layout_constraintBottom_toTopOf="@+id/last_update"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/shimmer" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
@@ -90,7 +118,37 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="?android:attr/windowBackground"
-        app:menu="@menu/bottom_nav_menu" />
+        android:background="@color/surface"
+        app:itemIconTint="@color/bottom_nav_colors"
+        app:itemTextColor="@color/bottom_nav_colors"
+        app:menu="@menu/bottom_nav_menu"
+        app:elevation="8dp" />
+
+    <!-- FAB para abrir creación de noticias -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="@string/create_news_desc"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        app:backgroundTint="@color/primary"
+        app:tint="@color/white"
+        app:pressedTranslationZ="8dp"
+        android:visibility="gone" />
+
+    <!-- Contenedor fullscreen para LoginFragment (invisible por defecto) -->
+    <FrameLayout
+        android:id="@+id/login_host"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

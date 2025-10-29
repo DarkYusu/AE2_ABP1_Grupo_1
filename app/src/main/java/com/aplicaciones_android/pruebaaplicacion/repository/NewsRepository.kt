@@ -1,8 +1,10 @@
 //region Imports y declaración
 package com.aplicaciones_android.pruebaaplicacion.repository
 
+import android.util.Log
 import com.aplicaciones_android.pruebaaplicacion.model.News
 import com.aplicaciones_android.pruebaaplicacion.network.RetrofitClient
+import com.aplicaciones_android.pruebaaplicacion.network.TokenProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -20,7 +22,7 @@ class NewsRepository {
     private val api = RetrofitClient.api
 
     //region Obtener lista de noticias
-    suspend fun fetchNews(user: String = "demo"): Result<List<News>> = withContext(Dispatchers.IO) {
+    suspend fun fetchNews(user: String = TokenProvider.getUsername() ?: "demo"): Result<List<News>> = withContext(Dispatchers.IO) {
         try {
             val list: List<News> = api.getNews(user)
             Result.Success(list)
@@ -34,6 +36,12 @@ class NewsRepository {
 
     //region Crear noticia
     suspend fun createNoticia(user: String, titulo: String, descripcion: String, fuente: String) {
+        // Evitar llamadas si no hay token/username: lanzar excepción controlada
+        val token = TokenProvider.getToken()
+        val usernameStored = TokenProvider.getUsername()
+        if (token.isNullOrEmpty() || usernameStored.isNullOrEmpty()) {
+            throw IllegalStateException("No autenticado o no hay username. Inicia sesión para crear noticias.")
+        }
         // Obtener el next_id antes de crear la noticia
         val nextId = withContext(Dispatchers.IO) {
             try {
@@ -45,7 +53,29 @@ class NewsRepository {
         }
         val noticia = News(nextId, titulo, descripcion, fuente)
         withContext(Dispatchers.IO) {
-            api.createNoticia(user, noticia)
+            try {
+                // Log debug: token present, username and token_type
+                val tokenType = TokenProvider.getTokenType()
+                Log.d("NewsRepository", "Creating noticia. userParam=$user, usernameStored=$usernameStored, tokenPresent=${!token.isNullOrEmpty()}, tokenType=$tokenType")
+
+                // Usar username almacenado en el token (forzar que coincida con el subject)
+                val userToUse = usernameStored
+                Log.d("NewsRepository", "Calling API createNoticia with userPath=$userToUse")
+                api.createNoticia(userToUse, noticia)
+            } catch (e: HttpException) {
+                // El servidor devolvió un estado HTTP (403, 401, 422, etc.). Loguear y retornar.
+                try {
+                    val err = e.response()?.errorBody()?.string()
+                    Log.w("NewsRepository", "HTTP ${e.code()} error body: $err")
+                } catch (ex: Exception) {
+                    // ignore
+                }
+                Log.w("NewsRepository", "HttpException al crear noticia: ${e.code()} ${e.message}")
+                throw e
+            } catch (e: Exception) {
+                Log.e("NewsRepository", "Exception creando noticia", e)
+                throw e
+            }
         }
     }
     //endregion

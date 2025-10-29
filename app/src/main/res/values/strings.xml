@@ -4,4 +4,20 @@
     <string name="edit_news">Editar noticia</string>
     <string name="delete_news">Eliminar noticia</string>
     <string name="no_news">No hay noticias disponibles</string>
+
+    <!-- Strings para login -->
+    <string name="hint_user">Usuario</string>
+    <string name="hint_password">Contraseña</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="error_network">Error de red</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="create_news_desc">Crear noticia</string>
+    <string name="news_title">Noticias</string>
+    <string name="create_title">Crear</string>
+    <string name="create_news">Crear Noticia</string>
+    <string name="aplicacion_noticias">Aplicación de noticias</string>
+    <string name="hint_title">Título</string>
+    <string name="hint_description">Descripción</string>
+    <string name="hint_source">Fuente URL</string>
+    <string name="save_changes">Guardar cambios</string>
 </resources>

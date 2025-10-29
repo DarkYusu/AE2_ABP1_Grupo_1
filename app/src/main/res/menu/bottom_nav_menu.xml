@@ -3,10 +3,13 @@
     <item
         android:id="@+id/nav_list"
         android:icon="@android:drawable/ic_menu_agenda"
-        android:title="Noticias" />
+        android:title="@string/news_title" />
     <item
         android:id="@+id/nav_create"
         android:icon="@android:drawable/ic_input_add"
-        android:title="Crear" />
+        android:title="@string/create_title" />
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/logout" />
 </menu>
-

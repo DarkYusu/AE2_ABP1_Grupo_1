@@ -36,7 +36,7 @@ class ListNoticiasFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(NewsViewModel::class.java)
-        val emptyView = view.findViewById<TextView>(R.id.emptyView)
+        val emptyView = view.findViewById<View>(R.id.emptyView)
         viewModel.state.observe(viewLifecycleOwner) { state ->
             if (state is UiState.Success) {
                 // Ordena la lista por id descendente para evitar saltos visuales
@@ -48,6 +48,12 @@ class ListNoticiasFragment : Fragment() {
                 emptyView.visibility = View.GONE
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Forzar recarga cuando el fragment se vuelva visible (incluye inicio de la app)
+        viewModel.refresh()
     }
     //endregion
 }

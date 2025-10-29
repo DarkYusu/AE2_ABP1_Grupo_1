@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Paleta suave para modo nocturno -->
+    <color name="primary">#9FB6E7</color> <!-- lighter blue for contrast on dark background -->
+    <color name="primary_variant">#84A7DD</color>
+    <color name="accent">#6F9EDC</color>
+
+    <color name="surface">#0F1724</color> <!-- near-black navy -->
+    <color name="background_light">#071021</color> <!-- very dark background -->
+
+    <color name="text_primary">#E6EEF8</color>
+    <color name="text_secondary">#B8C7D9</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
