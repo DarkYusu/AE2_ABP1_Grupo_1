@@ -38,12 +38,27 @@ class EditNoticiaFragment : Fragment() {
     //region Inicialización de UI y lógica de edición
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Ajustar padding inferior del contenedor cuando aparece el teclado (IME) para un desplazamiento suave
+        // Ajustar ScrollView para IME: padding bottom y comportamiento igual que CreateNoticiaFragment
         try {
-            val scroll = view.findViewById<android.view.View>(android.R.id.content) ?: view
+            val scroll = view.findViewById<android.widget.ScrollView>(R.id.scroll_edit)
             ViewCompat.setOnApplyWindowInsetsListener(scroll) { v, insets ->
                 val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
                 v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, ime.bottom)
+                if (ime.bottom > 0) {
+                    v.post {
+                        try {
+                            val focused = v.findFocus()
+                            if (focused != null) {
+                                try {
+                                    val y = focused.top
+                                    (v as android.widget.ScrollView).smoothScrollTo(0, y)
+                                } catch (_: Exception) {}
+                            } else {
+                                try { (v as android.widget.ScrollView).smoothScrollTo(0, v.bottom) } catch (_: Exception) {}
+                            }
+                        } catch (_: Exception) {}
+                    }
+                }
                 insets
             }
         } catch (_: Exception) {}
